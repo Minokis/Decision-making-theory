@@ -1,0 +1,101 @@
+import numpy as np
+import sys
+
+
+
+# Часть 0: проверки всякие
+
+# аргументы
+print "This is the name of the script: ", sys.argv[0]
+print "Number of arguments: ", len(sys.argv)
+print "The arguments are: " , str(sys.argv)
+
+# теоретические вероятности
+theoreticalChangeProbability = ...
+thoreticalNoChangeProbability = ...
+print "For changing doors thoretical probability of victory is ", theoreticalChangeProbability
+print "For staying with your choice thoretical probability of victory is ", theoreticalNoChangeProbability
+
+# Часть 1: ввод и создание массивов
+
+# TODO: проверка типов (как?)
+n = sys.argv[1]
+m = sys.argv[2]
+iterations = sys.argv[3]
+# TODO: проверка аргументов
+#if len(sys.argv) != 3
+	#print "Usage: enter number of doors, number of cars and number of iterations."
+	#return 1 
+	
+# тут преобразование типов	
+#if sys.argv[2] > sys.argv[1] - 2
+ #print "Number of cars is max n-2"
+ 
+# Часть 2: создание дверей
+
+# doorsOpened = np.zeros((1, n), dtype=np.bool_) - не нужно
+doorsWithCars = np.zeros((1, n), dtype=np.bool_)
+# итеративно внести m значений true в массив doorsWithPrize
+
+# Часть 3: игра
+
+# рандомно выбрать дверь от 1 до m и запомнить этот индекс 
+# choice = rand ...
+
+def showGoat(choice)
+	# открыть дверь с флагом False из массива doorsWithCars, которую не выбрал участник
+	doorOpened = -1
+	for door in doorsWithCars:
+		if door == False and door != doorsWithPrize[choice]:
+			# doorOpened = индекс
+			break
+		if doorOpened >=0:
+			return doorOpened
+		else:
+			print "can't show the goat"
+	
+	
+# Часть 4.1: Стратегия смены двери: возвращает True, если победа при случайном выборе двери
+def changeDoor (choice, doorOpened):
+	# случайный выбор двери не choice и не doorOpened (проверить, что такие существуют!)
+	# choice2 = ...
+	if doorsWithCars[choice2] == True:
+		return True
+	else:
+		retirn False
+	
+		
+		
+# Часть 4.2: Стратегия оставаться при своем выборе: возвращает True, если победа при случайном выборе двери
+def notToChangeDoor (choice, doorOpened):
+	if doorsWithCars[choice] == True:
+		return True
+	else:
+		retirn False
+	
+
+# Как записать и вывести результат?
+# iterations
+
+winsWithChange = 0
+winsWithoutChange = 0
+
+for i in range (0, iterations):
+	createDoors()
+	startGame()
+	if changeDoor(choice, doorOpened) == True:
+		++winsWithChange
+	if notToChangeDoor(choice, doorOpened) == True:
+		++winsWithoutChange
+
+print "Changing doors: ", winsWithChange / iterations * 100, "% of wins."
+print "Staying with the first choice: ", winsWithoutChange * 100 / iterations, "% of wins."
+
+
+
+
+		
+		
+
+	
+
