@@ -1,29 +1,27 @@
-# Программа принимает на вход число дверей, число машин и количество итераций.
-# На каждой итерации учитывается выигрыш при стратегии смены двери и выборе первоначальной двери, чтобы потом посчитать
-# отношение удачных исходов при выборе той или иной стратегии.
-# Если результат не приближен к теоретической вероятности, программа выводит сообщение об ошибке в расчетах и завершает работу.
-# После всех итераций выводится сообщение о том, какую стратегию выбрать.
-# Теоретически всегда нужно сменить дверь.
+# Input: number of doors, number of cars and number of games(iterations).
+# If resulting ratio of wins is not close to theoretical probability, the program outputs error message and exits.
+# After all games the program prints a recommendation to choose a strategy.
+# Theoretically, it is always to change the door.
 
 import sys
 from random import seed, randint
 import numpy as np
 
-# открыть дверь с флагом False (т.е. без машины) из массива doors, которую не выбрал участник
+# opens the door without a car (False flag), which was not initially chosen by the player
 def show_goat(players_choice, doors_array):
     host_choice = players_choice
     while players_choice == host_choice or doors_array[host_choice]:
         host_choice = randint(carsTotal, doorsTotal-1)
     return host_choice
 
-# открыть дверь с флагом True (т.е. с машииной) из массива doors, которую не выбрал участник
+# opens the door with a car (True flag), which was not initially chosen by the player
 def show_car(players_choice, doors_array):
     host_choice = players_choice
     while players_choice == host_choice or not doors_array[host_choice]:
         host_choice = randint(0, carsTotal)
     return host_choice
 
-# Стратегия смены двери: возвращает True, если победа при случайном выборе двери
+# returns True if player changes the door and wins
 def change_door(players_choice, host_choice, doors_array):
     # случайный выбор двери не choice и не doorOpened (проверить, что такие существуют!)
     new_choice = players_choice
@@ -34,7 +32,7 @@ def change_door(players_choice, host_choice, doors_array):
     else:
         return False
 
-# Стратегия оставаться при своем выборе: возвращает True, если победа
+# returns True if player sticks to the door and wins
 def not_to_change_door(players_choice, doors_array):
     if doors_array[players_choice]:
         return True
@@ -46,7 +44,7 @@ if __name__ == '__main__':
         print("Usage: enter number of doors, cars, and iterations.")
         exit(1)
 
-    doorsOpened = 1  # по условию задачи ведущий открывает дверь 1 раз
+    doorsOpened = 1  # host opens a door once
     doorsTotal = int(sys.argv[1])
     carsTotal = int(sys.argv[2])
     iterations = int(sys.argv[3])
@@ -58,30 +56,30 @@ if __name__ == '__main__':
         print("Number of cars is max n-2")
         exit(1)
 
-    # цвета в консоли для удобства
+    # colors in the console
     B = '\033[30m'  # black
     R = '\033[31m'  # red
     G = '\033[32m'  # green
 
-    # условные вероятности выигрыша при смене двери и при изначальном выборе
+    # conditional probabilities of victory
     pWithChange = (carsTotal * (doorsTotal - 1))/(doorsTotal * (doorsTotal - 1 - doorsOpened))
     pWithoutChange = (carsTotal/doorsTotal)
 
-    # счетчики для выигрышей игрока
+    # counters
     winsWithChange = 0
     winsWithoutChange = 0
 
     for i in range(0, iterations):
-        # для нескольких открытых дверей можно записывать флаги в массив
+        # for many open doors another array can be used
         # doorsOpened = np.zeros((doorsTotal), dtype=np.bool_)
         doors = np.zeros(doorsTotal, dtype=np.bool_)
         doors[:carsTotal] = True
 
-        # игра
+        # game
         seed()
         choice = randint(0, doorsTotal - 1)
         doorOpened = show_goat(choice, doors)
-        # # alternative
+        # # alternative (do not use it, as it is not tested and written just for exercise)
         # doorOpened = show_car(choice, doors)
 
         if change_door(choice, doorOpened, doors):
@@ -93,18 +91,18 @@ if __name__ == '__main__':
     ratioWithoutChange = winsWithoutChange / iterations
 
     if abs(ratioWithChange - pWithChange) > 0.01:
-        print('{}Расхождение в расчетах: вероятность выигрыша при смене двери = {},'
-              ' на практике - {}. {}'.format(R, pWithChange, ratioWithChange, B))
+        print('{}Something is wrong in calculations: probability to win after changing the door is {},'
+              ' result - {}. {}'.format(R, pWithChange, ratioWithChange, B))
         exit(1)
 
     if abs(ratioWithoutChange - pWithoutChange) > 0.01:
-        print('{}Расхождение в расчетах: вероятность выигрыша, если оставить первую дверь = {},'
-              ' на практике - {}. {}'.format(R, pWithoutChange, ratioWithoutChange, B))
+        print('{}Something is wrong in calculations: probability to win after sticking to the door is {},'
+              ' result - {}. {}'.format(R, pWithoutChange, ratioWithoutChange, B))
         exit(1)
 
     if ratioWithChange > ratioWithoutChange:
-        print("{} Сменить дверь при {} дверей и {} машин: "
-              "{}% против {}%.{}".format(G, doorsTotal, carsTotal, ratioWithChange*100, ratioWithoutChange*100, B))
+        print("{}Change the door when there are {} doors and {} cars: "
+              "{}% versus {}%.{}".format(G, doorsTotal, carsTotal, ratioWithChange*100, ratioWithoutChange*100, B))
     else:
-        print("Оставить первоначальную дверь при {} дверей и {} машин: "
-              "{}% против {}%.".format(doorsTotal, carsTotal, ratioWithoutChange*100, ratioWithChange*100))
+        print("Stick to your choice when there are {} doors and {} cars: "
+              "{}% versus {}%.".format(doorsTotal, carsTotal, ratioWithoutChange*100, ratioWithChange*100))
