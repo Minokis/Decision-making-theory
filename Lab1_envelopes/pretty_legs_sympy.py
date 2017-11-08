@@ -1,3 +1,4 @@
+# пример использования sympy для поиска производной
 import sympy as sym
 
 x = sym.Symbol('x')

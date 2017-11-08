@@ -1,6 +1,4 @@
-# отключим лишние предупреждения Anaconda
-import warnings
-warnings.filterwarnings('ignore')
+# Пример использования matplotlib
 
 import numpy as np
 from math import pi, atan
