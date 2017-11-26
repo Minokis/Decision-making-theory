@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from random import seed, randrange
+from random import seed, randrange, randint
 import math
 
 # Правило формирования конвертов (см readme.txt):
@@ -43,26 +43,34 @@ def Density(x, lam):
 iterations = 10000
 uni_sample = np.random.sample(iterations)
 # затем создадим выборку из экспоненциального распределения
-exp_sample_hard_way = np.array([ReverseFunc(x, 2) for x in uni_sample])
+exp_sample = np.array([ReverseFunc(x, 2) for x in uni_sample])
 
 # короткий путь: известные распределения уже есть в numpy
-# exp_sample = np.random.exponential(0.5, iterations)
+# exp_sample_easy_way = np.random.exponential(0.5, iterations)
 
-fig, ax = plt.subplots(figsize=(8, 4))
-n_bins = 50
-n, bins, patches = ax.hist(exp_sample_hard_way, n_bins, normed=1, histtype='step',
-                           cumulative=True, label='Empirical')
+# fig, ax = plt.subplots(figsize=(8, 4))
+# n_bins = 50
+# n, bins, patches = ax.hist(exp_sample, n_bins, normed=1, histtype='step',
+#                            cumulative=True, label='Empirical')
 
-x = np.arange(0, 5, 0.05)
-ax.plot(x, [CumFunc(i, 2) for i in x], 'k--', linewidth=1.5, label='Theoretical')
+# x = np.arange(0, 5, 0.05)
+# ax.plot(x, [CumFunc(i, 2) for i in x], 'k--', linewidth=1.5, label='Theoretical')
+#
+# ax.grid(True)
+# ax.legend(loc='right')
+# ax.set_title('Cumulative step histograms')
+# ax.set_xlabel('Sample')
+# ax.set_ylabel('Likelihood of occurrence')
+# plt.show()
 
-ax.grid(True)
-ax.legend(loc='right')
-ax.set_title('Cumulative step histograms')
-ax.set_xlabel('Sample')
-ax.set_ylabel('Likelihood of occurrence')
+wins_if_change = 0
+for i in range(iterations):
+    X = 2/3*exp_sample[i] if randint(0,1) else 1/3*exp_sample[i]
+    Y = exp_sample[i] - X
+    if X < Y:
+        wins_if_change += 1
 
-plt.show()
+print(wins_if_change/iterations)
 
 # разложите случайным образом суммы по конвертам.
 # Отметьте реализации игры, в которых вам достался конверт с наибольшей суммой,
